@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  #   front:
+  #     build:
+  #       context: ./
+  #       dockerfile: ./docker/front/Dockerfile
+  #     command: sh -c "npm run start"
+  #     ports:
+  #       - "3000:3000"
+  #     tty: true
+  #     volumes:
+  #       - "./front:/front"
+  #     working_dir: /front
+  back:
+    build:
+      context: ./
+      dockerfile: ./docker/back/Dockerfile
+    command: sh -c "node src/index.js"
+    ports:
+      - "4000:4000"
+    tty: true
+    volumes:
+      - "./back:/back"
+    working_dir: /back

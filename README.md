@@ -13,10 +13,13 @@ GraphQL の入門、及び React × GraphQL クライアントの Apollo を利�
     - [Mutation によるデータ書き込み](#mutation-によるデータ書き込み)
     - [Subscription  でデータのリアルタイム更新](#subscription-でデータのリアルタイム更新)
     - [スキーマの定義](#スキーマの定義)
+    - [スキーマ定義の拡張の流れ](#スキーマ定義の拡張の流れ)
   - [GraphQL を用いたアーキテクチャ](#graphql-を用いたアーキテクチャ)
     - [1. DB に接続された GraphQL サーバ(一般的)](#1-db-に接続された-graphql-サーバ一般的)
     - [2. 既存のシステムを統合する GraphQL レイヤー](#2-既存のシステムを統合する-graphql-レイヤー)
     - [3. データベース接続と既存システムの統合によるハイブリッドアプローチ](#3-データベース接続と既存システムの統合によるハイブリッドアプローチ)
+  - [環境構築に際して使用するライブラリ](#環境構築に際して使用するライブラリ)
+  - [バックエンド側の構築](#バックエンド側の構築)
 
 ---
 
@@ -143,6 +146,7 @@ type Mutation { ... }
 type Subscription { ... }
 
 # root fieldを定義
+# 利用可能なAPIを定義する。
 type Query {
   allPersons(last: Int): [Person!]!
 }
@@ -155,6 +159,38 @@ type Subscription {
   newPerson: Person!
 }
 ```
+
+```js
+const { ApolloServer } = require("apollo-server");
+
+// typeDefs定数は、GraphQLスキーマを定義します
+const typeDefs = `
+  type Query {
+    info: String!
+  }
+`;
+
+// resolversオブジェクトは、GraphQLスキーマの実際の実装です。
+// 全てのフィールドは、リゾルバ関数の実装を持つ必要がある。
+const resolvers = {
+  Query: {
+    info: () => `This is the API of a Hackernews Clone`,
+    // nullを返すとエラーを返す（String! と定義しているため。）
+    // info: () => null,
+  },
+};
+
+// どのような API 操作を受け入れ、どのように解決すべきかをサーバに伝えます。
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+```
+
+### スキーマ定義の拡張の流れ
+
+1. 新しいルートフィールドでスキーマ定義を拡張する。
+2. 追加されたルートフィールドに対応するリゾルバ関数を実装する。
 
 ---
 
@@ -186,3 +222,55 @@ GraphQL の仕様を実装した単一の（Web）サーバーとクライアン
   レガシーシステムやサードパーティシステムと連携する GraphQL サーバーを構築することも可能
 
 ---
+
+## 環境構築に際して使用するライブラリ
+
+Frontend
+
+- React
+- Apollo Client 3.2
+  > 量産可能なキャッシュ機能付き GraphQL クライアント
+
+Backend
+
+- Apollo Server 2.18
+  > 簡単なセットアップ、パフォーマンス、優れた開発者体験に重点を置いた、フル機能の GraphQL サーバー
+- Prisma
+  > オープンソースのデータベースツールキットで、リレーショナルデータベースを簡単に扱うことができる。
+
+GraphQL クライアントを使用することで、\
+ネットワークやキャッシングのためのインフラ・コードを書く手間が省けます。
+
+GraphQL クライアント Apollo に関して
+
+> Apollo Client は、理解しやすく、柔軟で強力な GraphQL クライアントを構築するためのコミュニティ主導の取り組みです。Apollo は、ウェブやモバイルアプリケーションの構築に使われる主要な開発プラットフォームすべてに対応するライブラリを構築するという野心を持っています。現在は、React、Angular、Ember、Vue などの人気フレームワーク用のバインディングを備えた JavaScript クライアントと、iOS および Android クライアントの初期バージョンがあります。Apollo はプロダクション対応で、キャッシング、オプティミスティックな UI、サブスクリプションサポートなどの機能を備えています。
+
+---
+
+## バックエンド側の構築
+
+- node.js 環境を Docker で作成する。
+
+- node コンテナ内で下記ライブラリインストール
+
+```sh
+npm install apollo-server@^2 graphql@^14.6.0
+```
+
+> **apollo-server** は、完全な機能を備えた GraphQL サーバです。\
+> Express.js をベースにしており、他にもいくつかのライブラリが用意されているので、\
+> 本番環境に対応した GraphQL サーバを構築するのに役立ちます。\
+
+※apollo-server のバージョンは 3 も出ているが、チュートリアルでは 2 を使用しているので、一旦 2 で。
+
+ライブラリインストール後、back/src/index.js を作成する。\
+index.js には、
+
+1. クエリの GraphQL スキーマを定義し、
+2. リゾルバ関数を定義し、
+3. その 2 つをもとにサーバのインスタンスを作成して、サーバを立ち上げる
+
+```sh
+# サーバ立ち上げ
+node src/index.js
+```
