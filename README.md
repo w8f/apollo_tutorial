@@ -20,6 +20,8 @@ GraphQL の入門、及び React × GraphQL クライアントの Apollo を利�
     - [3. データベース接続と既存システムの統合によるハイブリッドアプローチ](#3-データベース接続と既存システムの統合によるハイブリッドアプローチ)
   - [環境構築に際して使用するライブラリ](#環境構築に際して使用するライブラリ)
   - [バックエンド側の構築](#バックエンド側の構築)
+    - [DB の追加](#db-の追加)
+    - [データ追加の流れ](#データ追加の流れ)
 
 ---
 
@@ -282,3 +284,32 @@ index.js には、
 # サーバ立ち上げ
 node src/index.js
 ```
+
+### DB の追加
+
+DB に SQLite、DB アクセスに、Prisma を使用。
+
+```sh
+# Prisma CLI と Prisma Clientのインストール
+npm install prisma --save-dev
+npm install @prisma/client
+
+# Prismaプロジェクトの初期化
+# prisma/schema.prismaファイル（DB定義のスキーマ）が生成される。
+npx prisma init
+
+# schema.prismaに必要なデータソース、モデル等を定義後、
+# 下記コマンドでマイグレーション実行。
+# → 実行後、prisma/migrations/実行日時_マイグレーション名ディレクトリにSQLが発行される。
+npx prisma migrate dev
+
+# スクリプト実行
+node src/script.js
+```
+
+### データ追加の流れ
+
+1. schema.prisma にモデルを定義する。
+2. マイグレーションする。
+3. PrismaClient のインスタンスからデータ追加のスクリプトを書く。
+4. スクリプト実行。
