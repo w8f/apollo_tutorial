@@ -187,6 +187,14 @@ const server = new ApolloServer({
 });
 ```
 
+```js
+const server = new ApolloServer({
+  // スキーマ定義をgqlファイルから読み込む形も可能
+  typeDefs: fs.readFileSync(path.join(__dirname, "schema.gql"), "utf-8"),
+  resolvers,
+});
+```
+
 ### スキーマ定義の拡張の流れ
 
 1. 新しいルートフィールドでスキーマ定義を拡張する。
