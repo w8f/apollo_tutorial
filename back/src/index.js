@@ -1,6 +1,9 @@
+const { PrismaClient } = require("@prisma/client");
 const { ApolloServer } = require("apollo-server");
 const fs = require("fs");
 const path = require("path");
+
+const prisma = new PrismaClient();
 
 // 1
 let links = [
@@ -17,21 +20,30 @@ const resolvers = {
     info: () => `This is the API of a Hackernews Clone`,
     // nullを返すとエラーを返す（String! と定義しているため。）
     // info: () => null,
-    feed: () => links,
+    feed: async (parent, args, context) => {
+      return context.prisma.link.findMany();
+    },
     link: (parent, args) => {
       return links.find((link) => link.id == args.id);
     },
   },
   Mutation: {
-    post: (parent, args) => {
-      let idCount = links.length;
-      const link = {
-        id: `link-${idCount++}`,
-        url: args.url,
-        description: args.description,
-      };
-      links.push(link);
-      return link;
+    post: (parent, args, context, info) => {
+      // let idCount = links.length;
+      // const link = {
+      //   id: `link-${idCount++}`,
+      //   url: args.url,
+      //   description: args.description,
+      // };
+      // links.push(link);
+      // return link;
+      const newLink = context.prisma.link.create({
+        data: {
+          url: args.url,
+          description: args.description,
+        },
+      });
+      return newLink;
     },
     updateLink: (parent, args) => {
       links = links
@@ -54,6 +66,11 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs: fs.readFileSync(path.join(__dirname, "schema.gql"), "utf-8"),
   resolvers,
+  // PrismaClientのインスタンスを（prismaとして）アタッチしているので、
+  // すべてのリゾルバでcontext.prismaにアクセスできるようになっています。
+  context: {
+    prisma,
+  },
 });
 
 server.listen().then(({ url }) => console.log(`Server is running on ${url}`));

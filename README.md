@@ -22,6 +22,7 @@ GraphQL の入門、及び React × GraphQL クライアントの Apollo を利�
   - [バックエンド側の構築](#バックエンド側の構築)
     - [DB の追加](#db-の追加)
     - [データ追加の流れ](#データ追加の流れ)
+    - [Prisma クライアントを使用した Apollo サーバと DB の疎通](#prisma-クライアントを使用した-apollo-サーバと-db-の疎通)
 
 ---
 
@@ -305,6 +306,9 @@ npx prisma migrate dev
 
 # スクリプト実行
 node src/script.js
+
+# データベースGUI立ち上げ
+npx prisma studio
 ```
 
 ### データ追加の流れ
@@ -313,3 +317,9 @@ node src/script.js
 2. マイグレーションする。
 3. PrismaClient のインスタンスからデータ追加のスクリプトを書く。
 4. スクリプト実行。
+
+### Prisma クライアントを使用した Apollo サーバと DB の疎通
+
+1. src/index.js で、Prisma クライアントのインスタンスを作成する。
+2. 作成したインスタンスを Apollo Server の context 引数に追加
+3. リゾルバ関数の context 引数から Prisma クライアントを通じて、DB 操作が可能に
