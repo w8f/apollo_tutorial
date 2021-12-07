@@ -71,10 +71,25 @@ const resolvers = {
   // },
 };
 
+const myPlugin = {
+  async requestDidStart(requestContext) {
+    console.log("Request started! Query:\n" + requestContext.request.query);
+    return {
+      async parsingDidStart(requestContext) {
+        console.log("parsing started");
+      },
+      async validationDidStart(requestContext) {
+        console.log("validation started");
+      },
+    };
+  },
+};
+
 // どのような API 操作を受け入れ、どのように解決すべきかをサーバに伝えます。
 const server = new ApolloServer({
   typeDefs: fs.readFileSync(path.join(__dirname, "schema.gql"), "utf-8"),
   resolvers,
+  plugins: [myPlugin],
   // PrismaClientのインスタンスを（prismaとして）アタッチしているので、
   // すべてのリゾルバでcontext.prismaにアクセスできるようになっています。
 
