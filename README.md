@@ -10,6 +10,7 @@ GraphQL の入門、及び React × GraphQL クライアントの Apollo を利�
     - [REST と比較した GraphQL の利点](#rest-と比較した-graphql-の利点)
   - [GraphQL の基本的な言語構成](#graphql-の基本的な言語構成)
     - [Query を用いたデータ取得](#query-を用いたデータ取得)
+    - [フィルタリング、ページネーション、ソート](#フィルタリングページネーションソート)
     - [Mutation によるデータ書き込み](#mutation-によるデータ書き込み)
     - [Subscription  でデータのリアルタイム更新](#subscription-でデータのリアルタイム更新)
     - [スキーマの定義](#スキーマの定義)
@@ -100,6 +101,23 @@ GraphQL は REST API と違い API のエンドポイントは一つ\
 }
 
 ```
+
+### フィルタリング、ページネーション、ソート
+
+フィルタリング
+
+- schema 定義で filter を受け取るように設定する。
+- リゾルバの実装では、args.filter を介して where 句に filter の内容を指定することでフィルタリングできる。
+
+ページネーション
+
+- Limit, Offset を指定するパターンとカーソルベースのページネーションを実装できる。
+  - skip ... start index
+  - take ... limit
+
+ソート
+
+- schema にて、昇順、降順の enum, orderby される想定のフィールドについて定義する。
 
 ### Mutation によるデータ書き込み
 
