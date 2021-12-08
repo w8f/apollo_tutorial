@@ -13,6 +13,8 @@ const post = async (parent, args, context, info) => {
     },
   });
 
+  context.pubsub.publish("NEW_LINK", newLink);
+
   return newLink;
 };
 
@@ -51,8 +53,45 @@ const login = async (parent, args, context, info) => {
   };
 };
 
+const vote = async (parent, args, context, info) => {
+  const userId = context.userId;
+
+  const vote = await context.prisma.vote.findUnique({
+    where: {
+      linkId_userId: {
+        linkId: Number(args.linkId),
+        userId: userId,
+      },
+    },
+  });
+
+  if (Boolean(vote)) {
+    throw new Error(`Already voted for link: ${args.linkId}`);
+  }
+
+  // 3
+  const newVote = context.prisma.vote.create({
+    data: {
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+      link: {
+        connect: {
+          id: Number(args.linkId),
+        },
+      },
+    },
+  });
+  context.pubsub.publish("NEW_VOTE", newVote);
+
+  return newVote;
+};
+
 module.exports = {
   post,
   signup,
   login,
+  vote,
 };
