@@ -23,7 +23,8 @@ GraphQL の入門、及び React × GraphQL クライアントの Apollo を利�
     - [2. 既存のシステムを統合する GraphQL レイヤー](#2-既存のシステムを統合する-graphql-レイヤー)
     - [3. データベース接続と既存システムの統合によるハイブリッドアプローチ](#3-データベース接続と既存システムの統合によるハイブリッドアプローチ)
   - [環境構築に際して使用するライブラリ](#環境構築に際して使用するライブラリ)
-  - [バックエンド側の構築](#バックエンド側の構築)
+  - [フロントエンドの構築](#フロントエンドの構築)
+  - [バックエンドの構築](#バックエンドの構築)
     - [DB の追加](#db-の追加)
     - [データ追加の流れ](#データ追加の流れ)
     - [Prisma クライアントを使用した Apollo サーバと DB の疎通](#prisma-クライアントを使用した-apollo-サーバと-db-の疎通)
@@ -321,7 +322,65 @@ GraphQL クライアント Apollo に関して
 
 ---
 
-## バックエンド側の構築
+## フロントエンドの構築
+
+- node.js 環境を Docker で作成する。
+
+- node コンテナ内で cra する
+
+```sh
+npx create-react-app front
+```
+
+- 各種ライブラリインストール
+
+```sh
+# @apollo/client には、GraphQL クライアントを配線するために必要なすべてのパーツが含まれています。ApolloClient、ApolloProviderと呼ばれるReactアプリをラップするプロバイダ、useQueryなどのカスタムフックなどが公開されています。
+
+# graphql には Facebook の GraphQL のリファレンス実装が含まれており、
+# Apollo Client はその機能の一部を使用しています。
+
+npm i @apollo/client graphql
+```
+
+- index.js の修正
+
+```js
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./components/App";
+
+// Apollo クライアントを接続するために必要な依存関係を @apollo/client からインポートします。
+import {
+  ApolloProvider,
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+} from "@apollo/client";
+
+// ApolloClientインスタンスをGraphQLAPIに接続するためのhttpLinkを作成。
+const httpLink = createHttpLink({
+  url: "http://localhost:4000",
+});
+
+// ApolloClient のインスタンスを作成
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+});
+
+// ApolloProvider でラップする。propにclientを渡す
+ReactDOM.render(
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  document.getElementById("root")
+);
+```
+
+---
+
+## バックエンドの構築
 
 - node.js 環境を Docker で作成する。
 
