@@ -16,7 +16,7 @@ const feed = async (parent, args, context, info) => {
   });
 
   const count = await context.prisma.link.count({ where });
-  return { links, count };
+  return { id: "main-feed", links, count };
 };
 
 module.exports = {

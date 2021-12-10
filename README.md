@@ -18,6 +18,7 @@ GraphQL の入門、及び React × GraphQL クライアントの Apollo を利�
     - [スキーマ定義の拡張の流れ](#スキーマ定義の拡張の流れ)
   - [Tips](#tips)
     - [コンテキスト](#コンテキスト)
+    - [useQuery](#usequery)
   - [GraphQL を用いたアーキテクチャ](#graphql-を用いたアーキテクチャ)
     - [1. DB に接続された GraphQL サーバ(一般的)](#1-db-に接続された-graphql-サーバ一般的)
     - [2. 既存のシステムを統合する GraphQL レイヤー](#2-既存のシステムを統合する-graphql-レイヤー)
@@ -267,6 +268,46 @@ tutorial では、src/resolvers ディレクトリ配下に各モデルごとに
   },
 ```
 
+### useQuery
+
+@apollo/client に用意されている **useQuery** フックを用いることで、\
+フロント側から gql のスキーマ定義をもとに、Apollo server からデータを取得することが可能。
+
+```js
+import Link from "./Link";
+import { useQuery, gql } from "@apollo/client";
+
+const FEED_QUERY = gql`
+  {
+    feed {
+      id
+      links {
+        id
+        createdAt
+        url
+        description
+      }
+    }
+  }
+`;
+
+const LinkList = () => {
+  // data, loading, errorの3つの引数を受け取ることができる。
+  const { data } = useQuery(FEED_QUERY);
+  return (
+    <div>
+      {data && (
+        <>
+          {data.feed.links.map((link) => (
+            <Link key={link.id} link={link} />
+          ))}
+        </>
+      )}
+    </div>
+  );
+};
+```
+
 ---
 
 ## GraphQL を用いたアーキテクチャ
@@ -360,7 +401,7 @@ import {
 
 // ApolloClientインスタンスをGraphQLAPIに接続するためのhttpLinkを作成。
 const httpLink = createHttpLink({
-  url: "http://localhost:4000",
+  uri: "http://localhost:4000",
 });
 
 // ApolloClient のインスタンスを作成
