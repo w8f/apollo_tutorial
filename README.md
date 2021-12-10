@@ -31,6 +31,7 @@ GraphQL の入門、及び React × GraphQL クライアントの Apollo を利�
     - [Prisma クライアントを使用した Apollo サーバと DB の疎通](#prisma-クライアントを使用した-apollo-サーバと-db-の疎通)
     - [認証周りのライブラリ追加](#認証周りのライブラリ追加)
     - [ログの追加](#ログの追加)
+    - [Apollo server を hot reload にしたい](#apollo-server-を-hot-reload-にしたい)
 
 ---
 
@@ -500,3 +501,19 @@ npm install jsonwebtoken bcryptjs
 
 apollo server の plugins にロガーの設定を書くことで実装できる。\
 <https://www.apollographql.com/docs/apollo-server/monitoring/metrics/#logging>
+
+### Apollo server を hot reload にしたい
+
+**nodemon** は node.js アプリをラップして、ホットリロードを可能にするライブラリ。
+
+nodemon パッケージをインストールし、\
+設定ファイル(nodemon.json)にて、監視対象のファイル、起動時のコマンドなどを指定できる。\
+<https://www.npmjs.com/package/nodemon>
+
+```sh
+# install
+npm i nodemon
+
+# run
+npx nodemon
+```

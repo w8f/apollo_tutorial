@@ -15,7 +15,7 @@ services:
     build:
       context: ./
       dockerfile: ./docker/back/Dockerfile
-    command: sh -c "node src/index.js"
+    command: sh -c "npx nodemon"
     ports:
       - "4000:4000"
       - "5555:5555"
