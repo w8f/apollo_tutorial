@@ -1,7 +1,8 @@
-import LinkList from "./LinkList";
+// import LinkList from "./LinkList";
+import CreateLink from "./CreateLink";
 
 const App = () => {
-  return <LinkList />;
+  return <CreateLink />;
 };
 
 export default App;

@@ -312,6 +312,54 @@ const LinkList = () => {
 
 ### useMutation
 
+フロントからMutationのクエリを投げたい時。\
+@apollo/client に用意されている **useMutation** フックを用いることで、\
+フロント側から gql のスキーマ定義をもとに、Apollo server へデータ登録、更新、削除することが可能。
+
+```js
+// 0.@apollo/clientからimportする
+import { useMutation, gql } from "@apollo/client";
+
+# 1.mutationのクエリを定数に定義
+const CREATE_LINK_MUTATION = gql`
+  mutation PostMutation($description: String!, $url: String!) {
+    post(description: $description, url: $url) {
+      id
+      createdAt
+      url
+      description
+    }
+  }
+`;
+
+const CreateLink = () => {
+  # 2. useMutationフックを利用して1で定義したクエリ、引数にバインドする変数を書く
+  const [createLink] = useMutation(CREATE_LINK_MUTATION, {
+    variables: {
+      description: formState.description,
+      url: formState.url,
+    },
+  });
+
+  return (
+    <div>
+      #　mutationの処理をしたい箇所で呼び出す
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          createLink();
+        }}
+      >
+        <div className="flex flex-column mt3">
+        ...
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
+};
+```
+
 ---
 
 ## GraphQL を用いたアーキテクチャ
