@@ -4,6 +4,7 @@ import "./styles/index.css";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { setContext } from "@apollo/client/link/context";
+import { BrowserRouter } from "react-router-dom";
 
 import {
   ApolloProvider,
@@ -17,7 +18,8 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = "<発行されたトークン>";
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJpYXQiOjE2Mzk0MDAxMzR9.gempfIM0TB8hUZScmx3uV5BwvR1NBy8U0drZpb9uF0E";
   return {
     headers: {
       ...headers,
@@ -32,9 +34,13 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>,
+  // React routerとApollo Clientを併用する場合、
+  // ApolloProviderをBrowserRouterでラップする必要がある。
+  <BrowserRouter>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </BrowserRouter>,
   document.getElementById("root")
 );
 

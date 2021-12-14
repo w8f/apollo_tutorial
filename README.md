@@ -312,7 +312,7 @@ const LinkList = () => {
 
 ### useMutation
 
-フロントからMutationのクエリを投げたい時。\
+フロントから Mutation のクエリを投げたい時。\
 @apollo/client に用意されている **useMutation** フックを用いることで、\
 フロント側から gql のスキーマ定義をもとに、Apollo server へデータ登録、更新、削除することが可能。
 
@@ -434,6 +434,8 @@ npx create-react-app front
 # Apollo Client はその機能の一部を使用しています。
 
 npm i @apollo/client graphql
+
+npm i react-router-dom
 ```
 
 - index.js の修正
