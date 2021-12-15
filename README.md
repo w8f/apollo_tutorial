@@ -20,6 +20,7 @@ GraphQL の入門、及び React × GraphQL クライアントの Apollo を利�
     - [コンテキスト](#コンテキスト)
     - [useQuery](#usequery)
     - [useMutation](#usemutation)
+  - [認証](#認証)
   - [GraphQL を用いたアーキテクチャ](#graphql-を用いたアーキテクチャ)
     - [1. DB に接続された GraphQL サーバ(一般的)](#1-db-に接続された-graphql-サーバ一般的)
     - [2. 既存のシステムを統合する GraphQL レイヤー](#2-既存のシステムを統合する-graphql-レイヤー)
@@ -359,6 +360,12 @@ const CreateLink = () => {
   );
 };
 ```
+
+---
+
+## 認証
+
+<https://www.apollographql.com/docs/react/networking/authentication/>
 
 ---
 

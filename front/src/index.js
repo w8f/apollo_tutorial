@@ -12,14 +12,14 @@ import {
   createHttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import { AUTH_TOKEN } from "./constants";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/",
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJpYXQiOjE2Mzk0MDAxMzR9.gempfIM0TB8hUZScmx3uV5BwvR1NBy8U0drZpb9uF0E";
+  const token = localStorage.getItem(AUTH_TOKEN);
   return {
     headers: {
       ...headers,
