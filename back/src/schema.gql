@@ -24,7 +24,7 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  createdAt: String!
+  createdAt: DateTime!
   postedBy: User
   votes: [Vote!]!
 }
@@ -54,3 +54,5 @@ enum Sort {
   asc
   desc
 }
+
+scalar DateTime
