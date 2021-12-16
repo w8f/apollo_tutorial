@@ -33,7 +33,7 @@ const Login = () => {
       password: formState.password,
       name: formState.name,
     },
-    onCompleted: (signup) => {
+    onCompleted: ({ signup }) => {
       localStorage.setItem(AUTH_TOKEN, signup.token);
       navigate("/");
     },
@@ -43,7 +43,7 @@ const Login = () => {
       email: formState.email,
       password: formState.password,
     },
-    onCompleted: (login) => {
+    onCompleted: ({ login }) => {
       localStorage.setItem(AUTH_TOKEN, login.token);
       navigate("/");
     },
