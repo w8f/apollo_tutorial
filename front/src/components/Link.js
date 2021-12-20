@@ -1,5 +1,6 @@
 import { LINKS_PER_PAGE, AUTH_TOKEN } from "../constants";
 import { timeDifferenceForDate } from "../utils";
+import { useMutation, gql } from "@apollo/client";
 
 const Link = (props) => {
   const { link } = props;
@@ -9,6 +10,32 @@ const Link = (props) => {
   const skip = 0;
   const orderBy = { createdBy: "desc" };
 
+  const VOTE_MUTATION = gql`
+    mutation VoteMutation($linkId: ID!) {
+      vote(linkId: $linkId) {
+        id
+        link {
+          id
+          votes {
+            id
+            user {
+              id
+            }
+          }
+        }
+        user {
+          id
+        }
+      }
+    }
+  `;
+
+  const [vote] = useMutation(VOTE_MUTATION, {
+    variables: {
+      linkId: link.id,
+    },
+  });
+
   return (
     <div className="flex mt2 items-start">
       <div className="flex items-center">
@@ -17,7 +44,7 @@ const Link = (props) => {
           <div
             className="ml1 gray fl1"
             style={{ cursor: "pointer" }}
-            // onclick={vote}
+            onClick={vote}
           >
             ▲
           </div>

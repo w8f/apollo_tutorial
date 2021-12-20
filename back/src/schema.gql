@@ -9,7 +9,7 @@ type Mutation {
   # deleteLink(id: ID!): Link
   signup(email: String!, password: String!, name: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
-  vote(linkId: Int): Vote
+  vote(linkId: ID!): Vote
 }
 type Subscription {
   newLink: Link
