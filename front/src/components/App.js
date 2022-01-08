@@ -2,6 +2,7 @@ import LinkList from "./LinkList";
 import CreateLink from "./CreateLink";
 import Header from "./Header";
 import { Route, Routes } from "react-router-dom";
+import Search from "./Search";
 import Login from "./Login";
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
           <Route exact path="/" element={<LinkList />} />
           <Route exact path="/create" element={<CreateLink />} />
           <Route exact path="/login" element={<Login />} />
+          <Route exact path="/search" element={<Search />} />
         </Routes>
       </div>
     </div>
