@@ -181,6 +181,15 @@ subscription {
 }
 ```
 
+### Subscription  ApolloClient 側の実装
+
+ApolloClient にサブスクリプションのエンドポイントに関する情報を設定する必要がある。\
+今回は、@apollo/client/link/ws パッケージに含まれる WebSocketLink を使用する。
+
+```
+yarn add subscriptions-transport-ws
+```
+
 ### スキーマの定義
 
 スキーマは、API の機能を指定し、クライアントがどのようにデータをリクエストするかを定義する。\
