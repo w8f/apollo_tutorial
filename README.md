@@ -190,6 +190,20 @@ ApolloClient にサブスクリプションのエンドポイントに関する�
 yarn add subscriptions-transport-ws
 ```
 
+実装の詳細は index.js を参照\
+Subscription  実装の流れ
+
+- ApolloClient server
+
+1. WebSocketLink のオブジェクトを作成し、uri, option などを設定する。
+2. split 関数を用いて、link のルーティングの設定を行う。
+
+subscription  実行の流れ
+
+1. subscription のクエリを定義する。
+2. useQuery オブジェクトにある subscriptionToMore 関数を利用し、バックエンドから subscription を受け取ったときの挙動を実装する。（実装の詳細は LinkList.js 参照）
+3. subscriptionToMore 関数の updateQuery フィールドを使用することで、キャッシュの更新、データの再描画も行ってくれる。
+
 ### スキーマの定義
 
 スキーマは、API の機能を指定し、クライアントがどのようにデータをリクエストするかを定義する。\

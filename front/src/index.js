@@ -11,7 +11,10 @@ import {
   ApolloClient,
   createHttpLink,
   InMemoryCache,
+  split,
 } from "@apollo/client";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 import { AUTH_TOKEN } from "./constants";
 
 const httpLink = createHttpLink({
@@ -28,8 +31,35 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const wsLink = new WebSocketLink({
+  uri: `ws://localhost:4000/graphql`,
+  options: {
+    reconnect: true,
+    connectionParams: {
+      authToken: localStorage.getItem(AUTH_TOKEN),
+    },
+  },
+});
+
+// splitは、特定のミドルウェアのリンクにリクエストを「ルーティング」するために使用されます。
+// 3つの引数を取り、最初の引数はテスト関数で、booleanを返します。
+// 残りの2つの引数は、ApolloLink型。
+// testがtrueを返した場合、リクエストは2番目の引数として渡されたリンクに転送されます。
+// falseの場合、3番目の引数に転送されます。
+
+// 要求される操作がsubscriptionだった場合（第一引数のテスト関数がtrueを帰す場合）
+// wsLinkに転送される。
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === "OperationDefinition" && operation === "subscription";
+  },
+  wsLink,
+  authLink.concat(httpLink)
+);
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link,
   cache: new InMemoryCache(),
 });
 
